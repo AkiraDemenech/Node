@@ -1,8 +1,21 @@
 import React from 'react'
 import {View, Text} from 'react-native'
+import Nodes from './Nodes' 
+import Input from './Input' 
 
-const Node = () => (
-	<Text>Olá</Text>
-)
+
+class Node extends React.Component {
+
+	render () {
+	return (
+	<View>
+		<Text>You are currently in node</Text>
+		<Input value={this.props.map[this.props.route.params.id].label} onChange={(name) => this.props.rename(this.props.route.params.id, name.trim())}/>
+
+		<Nodes {...this.props} list={this.props.map[this.props.route.params.id].ids} />
+	</View>
+	)
+	}
+}	
 
 export default Node

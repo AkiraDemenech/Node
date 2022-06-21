@@ -39,8 +39,8 @@ export default class AddEdges extends React.Component {
 	render () {
 		return (<View>
 
-			<Input hint='Edge A'	value={this.state.label_a}	onChange={((a) => this.setState({label_a: a}))} />
-			<Input hint='Edge B'	value={this.state.label_b}	onChange={((b) => this.setState({label_b: b}))} />
+			<Input hint='Node A'	value={this.state.label_a}	onChange={((a) => this.setState({label_a: a}))} />
+			<Input hint='Node B'	value={this.state.label_b}	onChange={((b) => this.setState({label_b: b}))} />
 
 			<Button label='Connect' action={this.submit} />
 	

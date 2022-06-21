@@ -1,4 +1,5 @@
 import React from 'react'
+import { Alert } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 
@@ -39,8 +40,10 @@ export default class App extends React.Component {
 	let a = this.get_node(x)
 	let b = this.get_node(y)
 
-	a.ids.push(b.id)
-	b.ids.push(a.id)
+	if(!a.ids.includes(b.id))
+		a.ids.push(b.id)
+	if(!b.ids.includes(a.id))
+		b.ids.push(a.id)
 	
 	const {nodes} = this.state
 	nodes[a.id] = a
@@ -60,38 +63,70 @@ export default class App extends React.Component {
  }
  
  add_node (label, callback = (() => console.log('\tNovo vértice adicionado (sem retorno requisitado)'))) {
+	if(label.length < 1) {
+		return 
+	}
 	const {ids, nodes, labels} = this.state
 	const id = this.state.last_id + 1	// incrementamos o id 
 	ids.push(id)	// adicionamos o id do vértice na lista
 	nodes[id] = {label, id, ids: []}	// e o vértice no mapa
 	
-	if(labels[label] === undefined)
+	if(labels[label] === undefined) 
 		labels[label] = []	// (também criamos a lista, caso já não houvesse)
-	labels[label].push(id)	// e o id no mapa por rótulo 	
+	labels[label].push(id)	// e o id no mapa por rótulo 		
+	if(labels.length > 1 && nodes[labels[labels.length - 2]].label === label) {
+		
+		Alert.alert('Conflict!', 'The node ' + label + ' already exists.', 
+					[{ text: 'Ok', onPress: () => console.log('Dismiss called....'), 
+						style: 'destructive' }]) 
+		console.log('Tentando nome já utilizado')
+		return 
 
-	//	ALTERAÇÃO: confirmar antes de adicionar uma label que já havia sido usada (else)
+	}	
+	
+
+	
 
 	// confirmar e guardar as alterações	
 	this.setState({last_id: id, ids, labels, nodes}, callback) 
  }
 
  rename_node (id, label) {
+	if(label.length < 1) {
+		return 
+	}
 	const {nodes, labels} = this.state
 	const node = nodes[id]
 	if(node === undefined) { // problemas!
 		//	ALTERAÇÃO: perguntar se quer criar o vértice, caso ele ainda não exista (caso impossível: não será indicado um id inexistente ao renomear um vértice existente)
+		console.log('O impossível aconteceu!')
 	} else {
+		if(node.label === label) // se já forem iguais, não faz absolutamente nada 
+			return 
 		node.label = label 
 		nodes[id] = node // guardar novamente, para garantir que não houve erro de referência (javascript é esquisito, não confio)
 		if(labels[label] === undefined)
 			labels[label] = [id] 
 		else {
-			labels[label].push(id)
-			if(nodes[labels[label][labels[label].length - 2]].label === label) // se o rótulo atual do último vértice que tinha esse rótulo ainda for esse, teremos um problema!
+			if(labels[label][labels[label].length - 1] === id) 
+				return 
+			if(this.get_node(label) !== undefined) // se o rótulo atual do último vértice que tinha esse rótulo ainda for esse, teremos um problema!
 			{
-				//	ALTERAÇÃO: perguntar para renomear como "Cópia de " .... 
+				Alert.alert('Conflict!', 'The node ' + label + ' already exists.', 
+					[ { text: 'Ok', 
+						onPress: () => console.log('Dismiss called....'), 
+						style: 'destructive' }, 
+						
+					//	{ text: 'Use copy of ' + label + ' instead', onPress: () => this.rename_node(id, 'Copy of ' + label) } 
+					] ) 
+				console.log('Tentando renomear para nome já utilizado')		
+				return 		
 			}
+			if(!labels[label].includes(id))
+				labels[label].push(id)
 		}	
+		
+			
 
 		this.setState({nodes, labels}) // "salvar" alterações 
 	}	
@@ -109,7 +144,7 @@ export default class App extends React.Component {
 		<NavigationContainer>
 			<Tab.Navigator>
 				<Tab.Screen name='All nodes'>
-					{(props) => <NodesNavScreen {...props} list={this.state.ids} map={this.state.nodes} />}
+					{(props) => <NodesNavScreen {...props} list={this.state.ids} map={this.state.nodes} rename={this.rename_node}/>}
 				</Tab.Screen>
 				<Tab.Screen name='Add edge'>
 					{(props) => <AddEdges {...props} add={this.add_edge} />}
