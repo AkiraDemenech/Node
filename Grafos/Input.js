@@ -1,12 +1,12 @@
 import React from 'react'
-import {View, TextInput, StyleSheet} from 'react-native'
+import {View, TextInput, StyleSheet, Dimensions} from 'react-native'
 
 const Input = ({value, hint, onChange}) => (
 	<View style={styles.inputContainer} >
 	
 		<TextInput placeholder={hint}
-			placeholderTextColor='#CACACA'
-			selectionColor='#666666' 
+			placeholderTextColor='#fafbfc'
+			selectionColor='#123456' 
 			onChangeText={onChange} 
 			value={value} 
 			style={styles.input} />
@@ -14,18 +14,14 @@ const Input = ({value, hint, onChange}) => (
 	</View>
 )
 
+const {width, height} = Dimensions.get('window')
 const styles = StyleSheet.create({
 	inputContainer: {
 		marginLeft: 20,
 		marginRight: 20,
-		shadowOpacity: 0.2,
-		shadowRadius: 3,
-		shadowOffset: {
-			width: 2,
-			height: 5
-		},
 		alignSelf: 'stretch',
-		flex: 2
+		flex: 1,
+		minHeight: height/5
 	}, input: {
 		paddingLeft: 10,
 		paddingRight: 10,

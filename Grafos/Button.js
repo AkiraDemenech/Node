@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View, Text, TouchableHighlight} from 'react-native'
+import {Dimensions, StyleSheet, View, Text, TouchableHighlight} from 'react-native'
 
 const Button = ({action, label}) => (
 	<View style={styles.buttonContainer}>
@@ -13,10 +13,12 @@ const Button = ({action, label}) => (
 
 
 
+const {width, height} = Dimensions.get('window')
 const styles = StyleSheet.create({
 	buttonContainer: {
 		alignItems: 'flex-end',
 		alignSelf: 'stretch',
+		minHeight: height/8, 
 		flex: 1
 	}, button: {
 		paddingLeft: 20,
@@ -25,7 +27,6 @@ const styles = StyleSheet.create({
 		marginLeft: 15,
 		marginTop: 15,
 		marginBottom: 15,
-		borderWidth: 2,
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: 'rgba('+Math.floor(Math.random() * 200 + 56)+', '+Math.floor(Math.random() * 206 + 50)+', '+Math.floor(200 + Math.random() * 56)+', '+Math.random()+')',

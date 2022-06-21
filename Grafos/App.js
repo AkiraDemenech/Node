@@ -73,18 +73,15 @@ export default class App extends React.Component {
 	
 	if(labels[label] === undefined) 
 		labels[label] = []	// (também criamos a lista, caso já não houvesse)
-	labels[label].push(id)	// e o id no mapa por rótulo 		
-	if(labels.length > 1 && nodes[labels[labels.length - 2]].label === label) {
-		
-		Alert.alert('Conflict!', 'The node ' + label + ' already exists.', 
-					[{ text: 'Ok', onPress: () => console.log('Dismiss called....'), 
-						style: 'destructive' }]) 
-		console.log('Tentando nome já utilizado')
-		return 
-
+	else if(this.get_node(label) !== undefined) {
+			this.alert(label)
+			return 
 	}	
+		
+		
 	
-
+	if(!labels[label].includes(id))
+		labels[label].push(id)	// e o id no mapa por rótulo 		
 	
 
 	// confirmar e guardar as alterações	
@@ -108,17 +105,9 @@ export default class App extends React.Component {
 		if(labels[label] === undefined)
 			labels[label] = [id] 
 		else {
-			if(labels[label][labels[label].length - 1] === id) 
-				return 
-			if(this.get_node(label) !== undefined) // se o rótulo atual do último vértice que tinha esse rótulo ainda for esse, teremos um problema!
+			if(this.get_node(label) !== undefined && labels[label][labels[label].length - 1] !== id) // se o rótulo atual do último vértice que tinha esse rótulo ainda for esse, teremos um problema!
 			{
-				Alert.alert('Conflict!', 'The node ' + label + ' already exists.', 
-					[ { text: 'Ok', 
-						onPress: () => console.log('Dismiss called....'), 
-						style: 'destructive' }, 
-						
-					//	{ text: 'Use copy of ' + label + ' instead', onPress: () => this.rename_node(id, 'Copy of ' + label) } 
-					] ) 
+				this.alert(label)
 				console.log('Tentando renomear para nome já utilizado')		
 				return 		
 			}
@@ -130,6 +119,13 @@ export default class App extends React.Component {
 
 		this.setState({nodes, labels}) // "salvar" alterações 
 	}	
+ }
+
+ alert (name) {
+	Alert.alert('Conflict!', 'The node ' + name + ' already exists.', 
+		[ { text: 'Ok', 
+			onPress: () => console.log('Dismiss called....'), 
+			style: 'destructive' } ] ) 
  }
 
  node (label, callback = console.log) {
