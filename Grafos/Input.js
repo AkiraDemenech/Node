@@ -5,7 +5,7 @@ const Input = ({value, hint, onChange}) => (
 	<View style={styles.inputContainer} >
 	
 		<TextInput placeholder={hint}
-			placeholderTextColor='#fafbfc'
+			placeholderTextColor='#afbecd'
 			selectionColor='#123456' 
 			onChangeText={onChange} 
 			value={value} 

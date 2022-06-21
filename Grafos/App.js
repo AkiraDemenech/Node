@@ -134,6 +134,10 @@ export default class App extends React.Component {
  }
 
  node (label, callback = console.log) {
+	if(label.length < 1) {
+		Alert.alert('Empty label', 'Please don\'t mess with the code.', [{text: 'Sorry', style: 'destructive', onPress: () => console.log('Entrada vazia desculpada')}]) 
+		return 
+	}	
 	const node = this.get_node(label)
 	if(node === undefined) {
 		Alert.alert('Add node ' + label, 'We didn\'t find any current node ' + label + ', do you want to create it?', 
