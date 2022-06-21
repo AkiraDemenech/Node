@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Keyboard, StyleSheet } from 'react-native'
 
 import Button from './Button' 
 import Input from './Input' 
@@ -14,10 +14,7 @@ export default class AddEdges extends React.Component {
 
 	success () {
 		console.log('Recebido!')
-		this.reset() // alertar o sucesso!
-	}
-
-	reset () {
+		Keyboard.dismiss()
 		this.setState({
 			label_a: '',
 			label_b: ''
@@ -28,7 +25,6 @@ export default class AddEdges extends React.Component {
 		super()
 		this.success = this.success.bind(this)
 		this.submit = this.submit.bind(this)
-		this.reset = this.reset.bind(this)
 
 		this.state = {
 			label_a: '',

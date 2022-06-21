@@ -12,7 +12,6 @@ const Button = ({action, label}) => (
 )
 
 
-
 const {width, height} = Dimensions.get('window')
 const styles = StyleSheet.create({
 	buttonContainer: {
@@ -34,7 +33,8 @@ const styles = StyleSheet.create({
 		flex: 1
 	}, submit: {
 		fontWeight: '900',
-		fontSize: 30
+		fontSize: 30, 
+		color: 'black'
 	}
 })
 

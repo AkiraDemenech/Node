@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 
@@ -8,6 +8,11 @@ import NodesNavScreen from './NodesNavScreen'
 
  
 const Tab = createMaterialBottomTabNavigator()
+const styles = StyleSheet.create({
+	tabBar: {
+		backgroundColor: 'black'
+	}
+})
  
 export default class App extends React.Component {
 
@@ -124,21 +129,26 @@ export default class App extends React.Component {
  alert (name) {
 	Alert.alert('Conflict!', 'The node ' + name + ' already exists.', 
 		[ { text: 'Ok', 
-			onPress: () => console.log('Dismiss called....'), 
+			onPress: () => console.log('Impedida a repetição de rótulo'), 
 			style: 'destructive' } ] ) 
  }
 
  node (label, callback = console.log) {
 	const node = this.get_node(label)
-	if(node === undefined) 
-		this.add_node(label, callback)
-	else callback()	
+	if(node === undefined) {
+		Alert.alert('Add node ' + label, 'We didn\'t find any current node ' + label + ', do you want to create it?', 
+		[{text: 'Create', onPress: () => this.add_node(label, callback)}, 
+		{ text: 'Cancel', onPress: () => console.log('Criação cancelada'), 
+		style: 'destructive' }]) 
+
+		console.log('Pedindo confirmação para criação do vértice, a dependência desse alerta impossibilita o uso em desktop.')
+	} else callback()	
  } 
   
  render () {
 	return(
 		<NavigationContainer>
-			<Tab.Navigator>
+			<Tab.Navigator barStyle={styles.tabBar}>
 				<Tab.Screen name='All nodes'>
 					{(props) => <NodesNavScreen {...props} list={this.state.ids} map={this.state.nodes} rename={this.rename_node}/>}
 				</Tab.Screen>
